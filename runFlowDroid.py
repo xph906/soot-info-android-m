@@ -53,9 +53,9 @@ def runFlowDroid(appList):
       len(app) == 0:
       continue
     try:
-      #args = ['java',javaMem, '-cp', '.:soot-trunk.jar:soot-infoflow.jar:soot-infoflow-android.jar:slf5j-api-1.7.5.jar:slf4j-simple-1.7.5.jar:axml-2.0.jar', 'soot.jimple.infoflow.android.TestApps.Test']
-      #args += [app, str(config['platformpath'])]
-      args = ['java', '-cp', './javaExample/', 'SleepMessages']
+      args = ['java',javaMem, '-cp', '.:soot-trunk.jar:soot-infoflow.jar:soot-infoflow-android.jar:slf5j-api-1.7.5.jar:slf4j-simple-1.7.5.jar:axml-2.0.jar', 'soot.jimple.infoflow.android.TestApps.Test']
+      args += [app, str(config['platformpath'])]
+      #args = ['java', '-cp', './javaExample/', 'SleepMessages']
       if flowdroidargs != None:
         args += [str(arg) for arg in flowdroidargs]
       logger.debug("command: "+str(args))
