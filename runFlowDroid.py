@@ -47,7 +47,7 @@ def runFlowDroid(appList):
 
   appListFile = open(appList)
   for app in appListFile:
-    app = app.strip().lower()
+    app = app.strip()
     bname = os.path.basename(app)
     if app.startswith('#') or \
       len(app) == 0:
@@ -83,7 +83,7 @@ def runFlowDroid(appList):
       # timeout
       if code == None:
         logger.debug("[timeout] kill process %d" %pid)
-        killProcessAndChildProcesses(pid)
+        killProcess(pid)
     except Exception as e:
       logger.error("runFlowDroid: "+str(e))
 
