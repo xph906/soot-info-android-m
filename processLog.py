@@ -32,6 +32,7 @@ class Flow:
 		line1 = "%s=>%s [%s]\n" \
 			%(self.sourceKey, self.sinkKey, originStr)
 		line2 = "  %s => %s" %(self.source, self.sink)
+		return line1+line2
 
 def processLogFile(fname, appName):
 	if appName in AppFlows:
@@ -118,5 +119,7 @@ def processLogDirectory(dirPath):
 
 	for key in sorted(AllFlows, key=lambda k: len(AllFlows[k]), reverse=True):
 		print key, str(len(AllFlows[key]))
+		for flow in AllFlows[key]:
+			print "  ", flow.toString()
 
 processLogDirectory(sys.argv[1])	
