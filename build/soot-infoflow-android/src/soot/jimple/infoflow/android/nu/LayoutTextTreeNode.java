@@ -23,7 +23,8 @@ public class LayoutTextTreeNode {
 	}
 	
 	public String toString(){
-		return "<"+nodeType+", id:"+nodeID+", childrenNum:"+(children==null? "0" : children.size())+", Text:"+text+" >";
+		//return "<"+nodeType+", id:"+nodeID+", childrenNum:"+(children==null? "0" : children.size())+", Text:"+text+" >";
+		return "<"+nodeType+", id:"+nodeID+", Text:"+text+" >";
 	}
 	
 	public String toStringTree(){

@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlPullParserException;
 
+import soot.G;
 import soot.Local;
 import soot.Main;
 import soot.MethodOrMethodContext;
@@ -40,6 +41,7 @@ import soot.RefType;
 import soot.Scene;
 import soot.SootClass;
 import soot.SootMethod;
+import soot.Transform;
 import soot.Unit;
 import soot.Value;
 import soot.ValueBox;
@@ -99,6 +101,8 @@ import soot.toolkits.graph.PseudoTopologicalOrderer;
 import soot.toolkits.graph.UnitGraph;
 import soot.toolkits.scalar.LocalDefs;
 import soot.util.queue.QueueReader;
+import vasco.soot.examples.CopyConstantTest;
+import vasco.soot.examples.SignTest;
 
 public class SetupApplication {
 
@@ -895,7 +899,7 @@ public class SetupApplication {
 		if (null != ipcManager) {
 			info.setIPCManager(ipcManager);
 		}
-
+		
 		info.computeInfoflow(apkFileLocation, path, entryPointCreator, sourceSinkManager);
 		this.maxMemoryConsumption = info.getMaxMemoryConsumption();
 		this.collectedSources = info.getCollectedSources();
@@ -907,8 +911,38 @@ public class SetupApplication {
 		/*XIANG*/
 		savedInfoFlow = info;
 		
-		FlowTriggerEventAnalyzer flowTriggerEventAnalyzer = new FlowTriggerEventAnalyzer(savedInfoFlow, apkFileLocation);
-		flowTriggerEventAnalyzer.analyzeRegistrationCalls();
+		//FlowTriggerEventAnalyzer flowTriggerEventAnalyzer = new FlowTriggerEventAnalyzer(savedInfoFlow, apkFileLocation);
+		//flowTriggerEventAnalyzer.analyzeRegistrationCalls();
+		//flowTriggerEventAnalyzer.analyzePredicates();
+		for (QueueReader<MethodOrMethodContext> rdr =
+				Scene.v().getReachableMethods().listener(); rdr.hasNext(); ) {
+			SootMethod m = rdr.next().method();
+			if(!m.hasActiveBody())
+				continue;
+			UnitGraph g = new ExceptionalUnitGraph(m.getActiveBody());
+			System.out.println("Analyze Method:"+m.getName());
+			FlowTriggerEventAnalyzer.displayGraph(g, m.getName(), g.getHeads(),false);
+		}
+		
+		//XIANG2
+		/*
+		initializeSoot(true);
+		SootMethod entryPoint = createEntryPointCreator().createFakeMain();
+		Scene.v().setEntryPoints(Collections.singletonList(entryPoint));
+		if (Scene.v().containsClass(entryPoint.getDeclaringClass().getName()))
+			Scene.v().removeClass(entryPoint.getDeclaringClass());
+		Scene.v().addClass(entryPoint.getDeclaringClass());
+		entryPoint.getDeclaringClass().setApplicationClass();
+		for(SootMethod m : Scene.v().getEntryPoints()){
+			System.out.println("XIANG: "+m);
+		}
+		
+		CopyConstantTest cgt = new CopyConstantTest();
+		PackManager.v().getPack("wjtp").add(new Transform("wjtp.ccp", cgt));
+		PackManager.v().getPack("cg").apply();
+		PackManager.v().getPack("wjtp").apply();
+		*/
+		//======END XIANG2==========
 		
 		return info.getResults();
 	}
